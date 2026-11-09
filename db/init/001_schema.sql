@@ -1,0 +1,28 @@
+CREATE TABLE roles (
+  name       VARCHAR(64) NOT NULL PRIMARY KEY,
+  is_builtin BOOLEAN     NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO roles (name, is_builtin) VALUES
+  ('system-admin', TRUE),
+  ('super-admin', TRUE),
+  ('admin', TRUE),
+  ('user', TRUE);
+
+CREATE TABLE users (
+  id            BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  email         VARCHAR(255) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  name          VARCHAR(255) NOT NULL,
+  phone         VARCHAR(32)  NULL,
+  role          VARCHAR(64)  NOT NULL,
+  is_active     BOOLEAN      NOT NULL DEFAULT TRUE,
+  company_name  VARCHAR(255) NULL,
+  department    VARCHAR(255) NULL,
+  designation   VARCHAR(255) NULL,
+  created_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_users_role FOREIGN KEY (role) REFERENCES roles (name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
